@@ -1,10 +1,10 @@
-import { View, Text } from 'react-native'
+import { View, Text, ActivityIndicator } from 'react-native'
 import React from 'react'
 
 const Home = () => {
   return (
-    <View>
-      <Text className="text-red-600">Home</Text>
+    <View className="flex-1 justify-center items-center">
+      <ActivityIndicator size={'large'} color="gray"/>
     </View>
   )
 }
