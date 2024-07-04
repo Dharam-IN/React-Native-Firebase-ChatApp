@@ -6,8 +6,12 @@ import { Octicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import Loading from '../components/Loading';
 import CustomKeyboardView from '../components/CustomKeyboardView'
+import {useAuth} from '../context/authContext'
+
 
 const SignUp = () => {
+
+  const {register} = useAuth()
 
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -18,17 +22,28 @@ const SignUp = () => {
   const profileRef = useRef("")
 
   const handleRegister = async() => {
-    if(!emailRef.current || !passwordRef.current || !usernameRef.current || profileRef.current){
+    if(!emailRef.current || !passwordRef.current || !usernameRef.current || !profileRef.current){
       Alert.alert("Sign Up", "Please Fill all the fields!");
       return;
     }
+
+    setLoading(true);
+
+    const response = await register(emailRef.current, passwordRef.current, usernameRef.current, profileRef.current)
+    setLoading(false)
+    console.log("got result", response)
+
+    if(!response.success){
+      Alert.alert("Sign up", response.msg);
+    }
+
   }
 
   return (
     <CustomKeyboardView>
       <StatusBar style='dark'/>
       <View className="flex-1 gap-12" style={{paddingTop: hp(5), paddingHorizontal: wp(5)}}>
-        {/* SignIn Image */}
+        {/* SignUp Image */}
         <View className="items-center">
           <Image style={{height: hp(25)}} resizeMode='contain' source={require("../assets/images/SignUp.jpg")}/>
         </View>
@@ -64,7 +79,7 @@ const SignUp = () => {
                     onChange={value => passwordRef.current = value}
                     style={{fontSize: hp(2)}}
                     className="flex-1 font-semibold text-neutral-700"
-                    placeholder='Please Enter Your Email'
+                    placeholder='Please Enter Your Password'
                     secureTextEntry
                     placeholderTextColor={"gray"}
                   />
